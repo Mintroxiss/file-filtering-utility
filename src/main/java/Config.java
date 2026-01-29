@@ -5,8 +5,8 @@ public class Config {
     private boolean addMode = false;
     private boolean shortStatMode = false;
     private boolean fullStatMode = false;
-    private final List<String> paths = new ArrayList<>();
-    private final List<String> namePrefixes = new ArrayList<>();
+    private String path = "";
+    private String namePrefix = "";
     private final List<String> files = new ArrayList<>();
 
     public boolean isAddMode() {
@@ -19,14 +19,6 @@ public class Config {
 
     public boolean isFullStatMode() {
         return fullStatMode;
-    }
-
-    public List<String> getPaths() {
-        return paths;
-    }
-
-    public List<String> getNamePrefixes() {
-        return namePrefixes;
     }
 
     public List<String> getFiles() {
@@ -43,5 +35,21 @@ public class Config {
 
     public void setFullStatMode(boolean fullStatMode) {
         this.fullStatMode = fullStatMode;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getNamePrefix() {
+        return namePrefix;
+    }
+
+    public void setNamePrefix(String namePrefix) {
+        this.namePrefix = namePrefix;
     }
 }
