@@ -1,4 +1,8 @@
-public class Parser {
+package config;
+
+import output.ReportPrinter;
+
+public class ArgParser {
     public static Config parse(String[] args) {
         Config conf = new Config();
 
@@ -9,7 +13,7 @@ public class Parser {
                         conf.setPath(args[i + 1]);
                         i++;
                     } else {
-                        collectErrorMessage(args[i], "пути для результатов");
+                        ReportPrinter.optionRequiresError(args[i], "пути для результатов");
                     }
                 }
                 case "-p" -> {
@@ -17,7 +21,7 @@ public class Parser {
                         conf.setNamePrefix(args[i + 1]);
                         i++;
                     } else {
-                        collectErrorMessage(args[i], "префикса имён выходных файлов");
+                        ReportPrinter.optionRequiresError(args[i], "префикса имён выходных файлов");
                     }
                 }
                 case "-a" -> conf.setAddMode(true);
@@ -30,7 +34,5 @@ public class Parser {
         return conf;
     }
 
-    private static void collectErrorMessage(String option, String requirement) {
-        System.out.println("Опция \"" + option + "\" требует указания " + requirement);
-    }
+
 }
