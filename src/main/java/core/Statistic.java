@@ -12,14 +12,14 @@ public class Statistic {
 
     private BigDecimal integerCounter = BigDecimal.ZERO;
     private boolean hasIntegers;
-    private BigDecimal integerMin = BigDecimal.ZERO;
-    private BigDecimal integerMax = BigDecimal.ZERO;
+    private BigDecimal integerMin;
+    private BigDecimal integerMax;
     private BigDecimal integerSum = BigDecimal.ZERO;
 
     private BigDecimal floatCounter = BigDecimal.ZERO;
     private boolean hasFloats;
-    private BigDecimal floatMin = BigDecimal.ZERO;
-    private BigDecimal floatMax = BigDecimal.ZERO;
+    private BigDecimal floatMin;
+    private BigDecimal floatMax;
     private BigDecimal floatSum = BigDecimal.ZERO;
 
     public long getSentenceCounter() {

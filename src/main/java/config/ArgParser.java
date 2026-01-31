@@ -5,7 +5,6 @@ import output.ReportPrinter;
 public class ArgParser {
     public static Config parse(String[] args) {
         Config conf = new Config();
-
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-o" -> {
@@ -30,7 +29,6 @@ public class ArgParser {
                 default -> conf.getFiles().add(args[i]);
             }
         }
-
         return conf;
     }
 
