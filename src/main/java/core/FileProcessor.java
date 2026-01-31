@@ -21,20 +21,19 @@ public class FileProcessor {
         for (String pathToFile : config.getFiles()) {
             File file = new File(pathToFile);
             if (!file.isFile() || !file.exists()) {
-                ReportPrinter.printFileError(file);
+                ReportPrinter.fileError(file);
                 continue;
             }
-            try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
-                char[] readSymbols = new char[3072];
-                int count = reader.read(readSymbols);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(file), StandardCharsets.UTF_8))) {
                 StringBuilder text = new StringBuilder();
-                while (count > 0) {
-                    text.append(readSymbols, 0, count);
-                    count = reader.read(readSymbols);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    text.append(line).append(System.lineSeparator());
                 }
                 parseStringsFromFile(text.toString().split("\\R"));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(e);  // TODO
             }
         }
     }
@@ -42,13 +41,11 @@ public class FileProcessor {
     private void parseStringsFromFile(String[] stringsFromFile) {
         for (String value : stringsFromFile) {
             if (isInteger(value)) {
-                long integerValue = Long.parseLong(value);
-                storage.addInteger(integerValue);
-                statistic.addInteger(integerValue, config.isFullStatMode(), config.isShortStatMode());
+                storage.addInteger(value);
+                statistic.addInteger(Long.parseLong(value), config.isFullStatMode(), config.isShortStatMode());
             } else if (isDouble(value)) {
-                double floatValue = Double.parseDouble(value);
-                storage.addFloatNumber(floatValue);
-                statistic.addFloatNumber(floatValue, config.isFullStatMode(), config.isShortStatMode());
+                storage.addFloatNumber(value);
+                statistic.addFloatNumber(Double.parseDouble(value), config.isFullStatMode(), config.isShortStatMode());
             } else {
                 if (value.isEmpty()) {
                     continue;

@@ -6,7 +6,9 @@ import core.Statistic;
 import java.io.File;
 
 public class ReportPrinter {
-    public static void printStatistics(Config config, Statistic statistic) {
+    private static final String USE_CURRENT_DIRECTORY = "Будет использована текущая рабочая директория";
+
+    public static void statistics(Config config, Statistic statistic) {
         if (config.isShortStatMode() && config.isFullStatMode()) {
             System.out.println("Запрошены оба типа статистики. Будет выведена полная.");
         }
@@ -89,7 +91,7 @@ public class ReportPrinter {
         System.out.println(message);
     }
 
-    public static void printFileError(File file) {
+    public static void fileError(File file) {
         System.out.printf("Файла по пути \"%s\" не существует", file.getPath());
     }
 
@@ -99,5 +101,21 @@ public class ReportPrinter {
 
     public static void illegalArgumentsError(String error) {
         System.out.printf("Ошибка недопустимых аргументов: %s", error);
+    }
+
+    public static void notDirectoryError(File directory) {
+        System.out.printf(
+                "Путь \"%s\" существует, но это не директория. %s%n",
+                directory.getPath(),
+                USE_CURRENT_DIRECTORY
+        );
+    }
+
+    public static void createDirectoryError(File directory) {
+        System.out.printf("Не удалось создать директорию \"%s\". %s%n", directory.getPath(), USE_CURRENT_DIRECTORY);
+    }
+
+    public static void filledFileMessage(File file) {
+        System.out.printf("Файл \"%s\" успешно заполнен.%n", file.getAbsolutePath());
     }
 }

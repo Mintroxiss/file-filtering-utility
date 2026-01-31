@@ -5,18 +5,18 @@ import java.util.List;
 
 public class DataStorage {
     private final List<String> sentences = new ArrayList<>();
-    private final List<Long> integers = new ArrayList<>();
-    private final List<Double> floatNumbers = new ArrayList<>();
+    private final List<String> integers = new ArrayList<>();
+    private final List<String> floatNumbers = new ArrayList<>();
 
     public List<String> getSentences() {
         return sentences;
     }
 
-    public List<Long> getIntegers() {
+    public List<String> getIntegers() {
         return integers;
     }
 
-    public List<Double> getFloatNumbers() {
+    public List<String> getFloatNumbers() {
         return floatNumbers;
     }
 
@@ -24,11 +24,11 @@ public class DataStorage {
         sentences.add(value);
     }
 
-    public  void addInteger(long value) {
+    public void addInteger(String value) {
         integers.add(value);
     }
 
-    public void addFloatNumber(double value) {
+    public void addFloatNumber(String value) {
         floatNumbers.add(value);
     }
 }
