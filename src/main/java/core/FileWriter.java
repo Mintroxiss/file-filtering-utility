@@ -64,7 +64,7 @@ public class FileWriter {
             }
             ReportPrinter.filledFileMessage(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);  // TODO
+            ReportPrinter.writeFileError(file);
         }
     }
 

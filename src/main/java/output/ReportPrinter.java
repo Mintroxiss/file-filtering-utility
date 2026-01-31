@@ -118,4 +118,12 @@ public class ReportPrinter {
     public static void filledFileMessage(File file) {
         System.out.printf("Файл \"%s\" успешно заполнен.%n", file.getAbsolutePath());
     }
+
+    public static void writeFileError(File file) {
+        System.out.printf("Возникла ошибка при работе с файлом \"%s\".%n", file.getName());
+    }
+
+    public static void readFileError(File file) {
+        System.out.printf("Возникла ошибка при чтении файла \"%s\"%n", file.getName());
+    }
 }

@@ -33,7 +33,7 @@ public class FileProcessor {
                 }
                 parseStringsFromFile(text.toString().split("\\R"));
             } catch (IOException e) {
-                throw new RuntimeException(e);  // TODO
+                ReportPrinter.readFileError(file);
             }
         }
     }
