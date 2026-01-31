@@ -1,23 +1,28 @@
 package core;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Statistic {
-    private int sentenceCounter;
+    private static final int SCALE = 40;
+
+    private long sentenceCounter;
     private boolean hasSentences;
     private int sentenceMinLength, sentenceMaxLength;
 
-    private int integerCounter;
+    private BigDecimal integerCounter = BigDecimal.ZERO;
     private boolean hasIntegers;
-    private long integerMin;
-    private long integerMax;
-    private long integerSum;
+    private BigDecimal integerMin = BigDecimal.ZERO;
+    private BigDecimal integerMax = BigDecimal.ZERO;
+    private BigDecimal integerSum = BigDecimal.ZERO;
 
-    private int floatCounter;
+    private BigDecimal floatCounter = BigDecimal.ZERO;
     private boolean hasFloats;
-    private double floatMin;
-    private double floatMax;
-    private double floatSum;
+    private BigDecimal floatMin = BigDecimal.ZERO;
+    private BigDecimal floatMax = BigDecimal.ZERO;
+    private BigDecimal floatSum = BigDecimal.ZERO;
 
-    public int getSentenceCounter() {
+    public long getSentenceCounter() {
         return sentenceCounter;
     }
 
@@ -33,7 +38,7 @@ public class Statistic {
         return sentenceMaxLength;
     }
 
-    public int getIntegerCounter() {
+    public BigDecimal getIntegerCounter() {
         return integerCounter;
     }
 
@@ -41,23 +46,26 @@ public class Statistic {
         return hasIntegers;
     }
 
-    public long getIntegerMin() {
+    public BigDecimal getIntegerMin() {
         return integerMin;
     }
 
-    public long getIntegerMax() {
+    public BigDecimal getIntegerMax() {
         return integerMax;
     }
 
-    public long getIntegerSum() {
+    public BigDecimal getIntegerSum() {
         return integerSum;
     }
 
-    public double getIntegerAverage() {
-        return (integerCounter == 0) ? 0 : (double) integerSum / integerCounter;
+    public BigDecimal getIntegerAverage() {
+        if (integerCounter.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        return integerSum.divide(integerCounter, SCALE, RoundingMode.HALF_UP).stripTrailingZeros();
     }
 
-    public int getFloatCounter() {
+    public BigDecimal getFloatCounter() {
         return floatCounter;
     }
 
@@ -65,41 +73,52 @@ public class Statistic {
         return hasFloats;
     }
 
-    public double getFloatMin() {
+    public BigDecimal getFloatMin() {
         return floatMin;
     }
 
-    public double getFloatMax() {
+    public BigDecimal getFloatMax() {
         return floatMax;
     }
 
-    public double getFloatSum() {
+    public BigDecimal getFloatSum() {
         return floatSum;
     }
 
-    public double getFloatAverage() {
-        return (floatCounter == 0) ? 0 : floatSum / floatCounter;
+    public BigDecimal getFloatAverage() {
+        if (floatCounter.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        return floatSum.divide(floatCounter, SCALE, RoundingMode.HALF_UP).stripTrailingZeros();
     }
 
-    public void setMinMaxIntegerValues(long value) {
+    private void setMinMaxIntegerValues(BigDecimal value) {
         if (!hasIntegers) {
             integerMin = value;
             integerMax = value;
             hasIntegers = true;
         } else {
-            integerMin = Math.min(integerMin, value);
-            integerMax = Math.max(integerMax, value);
+            if (value.compareTo(integerMin) < 0) {
+                integerMin = value;
+            }
+            if (value.compareTo(integerMax) > 0) {
+                integerMax = value;
+            }
         }
     }
 
-    public void setMinMaxFloatNumValues(double value) {
+    private void setMinMaxFloatNumValues(BigDecimal value) {
         if (!hasFloats) {
             floatMin = value;
             floatMax = value;
             hasFloats = true;
         } else {
-            floatMin = Math.min(floatMin, value);
-            floatMax = Math.max(floatMax, value);
+            if (value.compareTo(floatMin) < 0) {
+                floatMin = value;
+            }
+            if (value.compareTo(floatMax) > 0) {
+                floatMax = value;
+            }
         }
     }
 
@@ -114,23 +133,23 @@ public class Statistic {
         }
     }
 
-    public void addInteger(long value, boolean fullStatMode, boolean shortStatMode) {
+    public void addInteger(BigDecimal value, boolean fullStatMode, boolean shortStatMode) {
         if (shortStatMode || fullStatMode) {
-            integerCounter++;
+            integerCounter = integerCounter.add(BigDecimal.ONE);
         }
         if (fullStatMode) {
             setMinMaxIntegerValues(value);
-            integerSum += value;  // TODO поработать с переполнением
+            integerSum = integerSum.add(value);
         }
     }
 
-    public void addFloatNumber(Double value, boolean fullStatMode, boolean shortStatMode) {
+    public void addFloatNumber(BigDecimal value, boolean fullStatMode, boolean shortStatMode) {
         if (shortStatMode || fullStatMode) {
-            floatCounter++;
+            floatCounter = floatCounter.add(BigDecimal.ONE);
         }
         if (fullStatMode) {
             setMinMaxFloatNumValues(value);
-            floatSum += value;  // TODO поработать с переполнением
+            floatSum = floatSum.add(value);
         }
     }
 

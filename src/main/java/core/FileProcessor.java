@@ -4,6 +4,7 @@ import config.Config;
 import output.ReportPrinter;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
 public class FileProcessor {
@@ -40,67 +41,32 @@ public class FileProcessor {
 
     private void parseStringsFromFile(String[] stringsFromFile) {
         for (String value : stringsFromFile) {
-            if (isInteger(value)) {
-                storage.addInteger(value);
-                statistic.addInteger(Long.parseLong(value), config.isFullStatMode(), config.isShortStatMode());
-            } else if (isDouble(value)) {
-                storage.addFloatNumber(value);
-                statistic.addFloatNumber(Double.parseDouble(value), config.isFullStatMode(), config.isShortStatMode());
-            } else {
-                if (value.isEmpty()) {
-                    continue;
+            value = value.trim();
+            if (value.isEmpty()) {
+                continue;
+            }
+            BigDecimal numberValue = parseNumber(value);
+            if (numberValue != null) {
+                BigDecimal normalized = numberValue.stripTrailingZeros();
+                if (normalized.scale() <= 0) {
+                    storage.addInteger(value);
+                    statistic.addInteger(normalized, config.isFullStatMode(), config.isShortStatMode());
+                } else {
+                    storage.addFloatNumber(value);
+                    statistic.addFloatNumber(normalized, config.isFullStatMode(), config.isShortStatMode());
                 }
+            } else {
                 storage.addSentence(value);
                 statistic.addSentence(value, config.isFullStatMode(), config.isShortStatMode());
             }
         }
     }
 
-    private boolean isInteger(String value) {  // TODO обработать числа с E
-        if (value.isEmpty()) return false;
-        int i = (value.charAt(0) == '-') ? 1 : 0;
-        if (value.length() == 1 && i == 1) {
-            return false;
+    private BigDecimal parseNumber(String value) {
+        try {
+            return new BigDecimal(value);
+        } catch (NumberFormatException e) {
+            return null;
         }
-        for (; i < value.length(); i++) {
-            if (!Character.isDigit(value.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isDouble(String value) {  // TODO обработать числа с E
-        if (value.isEmpty()) {
-            return false;
-        }
-        int i = 0;
-        if (value.charAt(0) == '-') {
-            if (value.length() == 1) {
-                return false;
-            }
-            i = 1;
-        }
-        boolean dotSeen = false;
-        boolean digitBeforeDot = false;
-        boolean digitAfterDot = false;
-        for (; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c == '.') {
-                if (dotSeen) {
-                    return false;
-                }
-                dotSeen = true;
-            } else if (Character.isDigit(c)) {
-                if (!dotSeen) {
-                    digitBeforeDot = true;
-                } else {
-                    digitAfterDot = true;
-                }
-            } else {
-                return false;
-            }
-        }
-        return dotSeen && digitBeforeDot && digitAfterDot;
     }
 }

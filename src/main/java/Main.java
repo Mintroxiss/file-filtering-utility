@@ -24,6 +24,5 @@ public class Main {
         ReportPrinter.statistics(config, statistic);
         FileWriter fileWriter = new FileWriter(config, storage);
         fileWriter.run();
-        
     }
 }

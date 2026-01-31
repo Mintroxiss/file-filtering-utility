@@ -17,40 +17,40 @@ public class ReportPrinter {
             message.append("""
                     
                     ЦЕЛЫЕ ЧИСЛА
-                    - Количество: %d
-                    """.formatted(statistic.getIntegerCounter())
+                    - Количество: %s
+                    """.formatted(statistic.getIntegerCounter().toPlainString())
             );
             if (statistic.isHasIntegers()) {
                 message.append("""
-                                - Минимальное: %d
-                                - Максимальное: %d
-                                - Сумма: %d
-                                - Среднее арифметическое: %f
+                                - Минимальное: %s
+                                - Максимальное: %s
+                                - Сумма: %s
+                                - Среднее арифметическое: %s
                                 """.formatted(
-                                statistic.getIntegerMin(),
-                                statistic.getIntegerMax(),
-                                statistic.getIntegerSum(),
-                                statistic.getIntegerAverage()
+                                statistic.getIntegerMin().toPlainString(),
+                                statistic.getIntegerMax().toPlainString(),
+                                statistic.getIntegerSum().toPlainString(),
+                                statistic.getIntegerAverage().toPlainString()
                         )
                 );
             }
             message.append("""
                     
                     ВЕЩЕСТВЕННЫЕ ЧИСЛА
-                    - Количество: %d
-                    """.formatted(statistic.getFloatCounter())
+                    - Количество: %s
+                    """.formatted(statistic.getFloatCounter().toPlainString())
             );
             if (statistic.isHasFloats()) {
                 message.append("""
-                                - Минимальное: %f
-                                - Максимальное: %f
-                                - Сумма: %f
-                                - Среднее арифметическое: %f
+                                - Минимальное: %s
+                                - Максимальное: %s
+                                - Сумма: %s
+                                - Среднее арифметическое: %s
                                 """.formatted(
-                                statistic.getFloatMin(),
-                                statistic.getFloatMax(),
-                                statistic.getFloatSum(),
-                                statistic.getFloatAverage()
+                                statistic.getFloatMin().toPlainString(),
+                                statistic.getFloatMax().toPlainString(),
+                                statistic.getFloatSum().toPlainString(),
+                                statistic.getFloatAverage().toPlainString()
                         )
                 );
             }
@@ -75,13 +75,13 @@ public class ReportPrinter {
             message.append("""
                             
                             КОЛИЧЕСТВО
-                            - целых чисел: %d
-                            - вещественных чисел: %d
+                            - целых чисел: %s
+                            - вещественных чисел: %s
                             - строк: %d
                             
                             """.formatted(
-                            statistic.getIntegerCounter(),
-                            statistic.getFloatCounter(),
+                            statistic.getIntegerCounter().toPlainString(),
+                            statistic.getFloatCounter().toPlainString(),
                             statistic.getSentenceCounter()
                     )
             );
