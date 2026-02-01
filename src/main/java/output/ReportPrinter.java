@@ -119,6 +119,7 @@ public class ReportPrinter {
 
     public void createDirectoryError(File directory) {
         out.printf("Не удалось создать директорию \"%s\". %s%n", directory.getPath(), USE_CURRENT_DIRECTORY);
+        dividerMessage();
     }
 
     public void filledFileMessage(File file) {
@@ -131,6 +132,7 @@ public class ReportPrinter {
 
     public void readFileError(File file) {
         out.printf("Возникла ошибка при чтении файла \"%s\".%n", file.getName());
+        dividerMessage();
     }
 
     public void unknownOptionError(String arg) {
