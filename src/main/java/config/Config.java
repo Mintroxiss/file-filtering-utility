@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Config {
-    private boolean addMode = false;
-    private boolean shortStatMode = false;
-    private boolean fullStatMode = false;
+    private boolean addMode;
+    private boolean shortStatMode;
+    private boolean fullStatMode;
     private String path = "";
     private String namePrefix = "";
     private final List<String> files = new ArrayList<>();

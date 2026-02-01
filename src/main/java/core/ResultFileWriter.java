@@ -60,9 +60,11 @@ public class ResultFileWriter {
             if (config.isAddMode() && file.length() > 0) {
                 writer.newLine();
             }
-            for (String element : elements) {
-                writer.write(element);
-                writer.newLine();
+            for (int i = 0; i < elements.size(); i++) {
+                writer.write(elements.get(i));
+                if (i < elements.size() - 1) {
+                    writer.newLine();
+                }
             }
             printer.filledFileMessage(file);
         } catch (IOException e) {
