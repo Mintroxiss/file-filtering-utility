@@ -3,26 +3,27 @@ import config.Config;
 import config.ConfigValidator;
 import core.DataStorage;
 import core.FileProcessor;
-import core.FileWriter;
+import core.ResultFileWriter;
 import core.Statistic;
 import output.ReportPrinter;
 
 public class Main {
 
     public static void main(String[] args) {
-        Config config = ArgParser.parse(args);
+        ReportPrinter printer = new ReportPrinter(System.out);
+        Config config = ArgParser.parse(args, printer);
         try {
             ConfigValidator.validate(config);
         } catch (IllegalArgumentException e) {
-            ReportPrinter.illegalArgumentsError(e.getMessage());
+            printer.illegalArgumentsError(e.getMessage());
             return;
         }
         DataStorage storage = new DataStorage();
         Statistic statistic = new Statistic();
         FileProcessor processor = new FileProcessor(config, storage, statistic);
-        processor.run();
-        ReportPrinter.statistics(config, statistic);
-        FileWriter fileWriter = new FileWriter(config, storage);
+        processor.run(printer);
+        printer.statistics(config, statistic);
+        ResultFileWriter fileWriter = new ResultFileWriter(config, storage, printer);
         fileWriter.run();
     }
 }

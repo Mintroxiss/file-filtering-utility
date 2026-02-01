@@ -18,47 +18,43 @@ public class FileProcessor {
         this.statistic = statistic;
     }
 
-    public void run() {
+    public void run(ReportPrinter printer) {
         for (String pathToFile : config.getFiles()) {
             File file = new File(pathToFile);
             if (!file.isFile() || !file.exists()) {
-                ReportPrinter.fileError(file);
+                printer.fileError(file);
                 continue;
             }
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                     new FileInputStream(file), StandardCharsets.UTF_8))) {
-                StringBuilder text = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    text.append(line).append(System.lineSeparator());
+                    parseLine(line);
                 }
-                parseStringsFromFile(text.toString().split("\\R"));
             } catch (IOException e) {
-                ReportPrinter.readFileError(file);
+                printer.readFileError(file);
             }
         }
     }
 
-    private void parseStringsFromFile(String[] stringsFromFile) {
-        for (String value : stringsFromFile) {
-            value = value.trim();
-            if (value.isEmpty()) {
-                continue;
-            }
-            BigDecimal numberValue = parseNumber(value);
-            if (numberValue != null) {
-                BigDecimal normalized = numberValue.stripTrailingZeros();
-                if (normalized.scale() <= 0) {
-                    storage.addInteger(value);
-                    statistic.addInteger(normalized, config.isFullStatMode(), config.isShortStatMode());
-                } else {
-                    storage.addFloatNumber(value);
-                    statistic.addFloatNumber(normalized, config.isFullStatMode(), config.isShortStatMode());
-                }
+    private void parseLine(String value) {
+        value = value.trim();
+        if (value.isEmpty()) {
+            return;
+        }
+        BigDecimal numberValue = parseNumber(value);
+        if (numberValue != null) {
+            BigDecimal normalized = numberValue.stripTrailingZeros();
+            if (normalized.scale() <= 0) {
+                storage.addInteger(value);
+                statistic.addInteger(normalized, config.isFullStatMode(), config.isShortStatMode());
             } else {
-                storage.addSentence(value);
-                statistic.addSentence(value, config.isFullStatMode(), config.isShortStatMode());
+                storage.addFloatNumber(value);
+                statistic.addFloatNumber(normalized, config.isFullStatMode(), config.isShortStatMode());
             }
+        } else {
+            storage.addSentence(value);
+            statistic.addSentence(value, config.isFullStatMode(), config.isShortStatMode());
         }
     }
 

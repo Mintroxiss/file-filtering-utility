@@ -12,13 +12,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class FileWriter {
+public class ResultFileWriter {
     private final Config config;
     private final DataStorage storage;
+    private final ReportPrinter printer;
 
-    public FileWriter(Config config, DataStorage storage) {
+    public ResultFileWriter(Config config, DataStorage storage, ReportPrinter printer) {
         this.config = config;
         this.storage = storage;
+        this.printer = printer;
     }
 
     public void run() {
@@ -62,9 +64,9 @@ public class FileWriter {
                 writer.write(element);
                 writer.newLine();
             }
-            ReportPrinter.filledFileMessage(file);
+            printer.filledFileMessage(file);
         } catch (IOException e) {
-            ReportPrinter.writeFileError(file);
+            printer.writeFileError(file);
         }
     }
 
@@ -72,12 +74,12 @@ public class FileWriter {
         File directory = new File(config.getPath());
         if (directory.exists()) {
             if (!directory.isDirectory()) {
-                ReportPrinter.notDirectoryError(directory);
+                printer.notDirectoryError(directory);
                 return false;
             }
         } else {
             if (!directory.mkdirs()) {
-                ReportPrinter.createDirectoryError(directory);
+                printer.createDirectoryError(directory);
                 return false;
             }
         }

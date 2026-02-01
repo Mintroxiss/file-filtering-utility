@@ -4,18 +4,25 @@ import config.Config;
 import core.Statistic;
 
 import java.io.File;
+import java.io.PrintStream;
 
 public class ReportPrinter {
-    private static final String USE_CURRENT_DIRECTORY = "Будет использована текущая рабочая директория";
+    private final PrintStream out;
 
-    public static void statistics(Config config, Statistic statistic) {
+    public ReportPrinter(PrintStream out) {
+        this.out = out;
+    }
+
+    private static final String USE_CURRENT_DIRECTORY = "Будет использована текущая рабочая директория.";
+
+    public void statistics(Config config, Statistic statistic) {
         if (config.isShortStatMode() && config.isFullStatMode()) {
-            System.out.println("Запрошены оба типа статистики. Будет выведена полная.");
+            out.println("Запрошены оба типа статистики. Будет выведена полная.");
+            dividerMessage();
         }
         StringBuilder message = new StringBuilder();
         if (config.isFullStatMode()) {
             message.append("""
-                    
                     ЦЕЛЫЕ ЧИСЛА
                     - Количество: %s
                     """.formatted(statistic.getIntegerCounter().toPlainString())
@@ -63,9 +70,7 @@ public class ReportPrinter {
             if (statistic.isHasSentences()) {
                 message.append("""
                                 - Минимальная длина: %d
-                                - Максимальная длина: %d
-                                
-                                """.formatted(
+                                - Максимальная длина: %d""".formatted(
                                 statistic.getSentenceMinLength(),
                                 statistic.getSentenceMaxLength()
                         )
@@ -73,13 +78,10 @@ public class ReportPrinter {
             }
         } else if (config.isShortStatMode()) {
             message.append("""
-                            
                             КОЛИЧЕСТВО
                             - целых чисел: %s
                             - вещественных чисел: %s
-                            - строк: %d
-                            
-                            """.formatted(
+                            - строк: %d""".formatted(
                             statistic.getIntegerCounter().toPlainString(),
                             statistic.getFloatCounter().toPlainString(),
                             statistic.getSentenceCounter()
@@ -88,42 +90,55 @@ public class ReportPrinter {
         } else {
             return;
         }
-        System.out.println(message);
+        out.println(message);
+        dividerMessage();
     }
 
-    public static void fileError(File file) {
-        System.out.printf("Файла по пути \"%s\" не существует", file.getPath());
+    public void fileError(File file) {
+        out.printf("Файла по пути \"%s\" не существует.%n", file.getPath());
+        dividerMessage();
     }
 
-    public static void optionRequiresError(String option, String requirement) {
-        System.out.printf("Опция \"%s\" требует указания %s%n", option, requirement);
+    public void optionRequiresError(String option, String requirement) {
+        out.printf("Опция \"%s\" требует указания %s.%n", option, requirement);
+        dividerMessage();
     }
 
-    public static void illegalArgumentsError(String error) {
-        System.out.printf("Ошибка недопустимых аргументов: %s", error);
+    public void illegalArgumentsError(String error) {
+        out.printf("Ошибка недопустимых аргументов: %s", error);
     }
 
-    public static void notDirectoryError(File directory) {
-        System.out.printf(
+    public void notDirectoryError(File directory) {
+        out.printf(
                 "Путь \"%s\" существует, но это не директория. %s%n",
                 directory.getPath(),
                 USE_CURRENT_DIRECTORY
         );
+        dividerMessage();
     }
 
-    public static void createDirectoryError(File directory) {
-        System.out.printf("Не удалось создать директорию \"%s\". %s%n", directory.getPath(), USE_CURRENT_DIRECTORY);
+    public void createDirectoryError(File directory) {
+        out.printf("Не удалось создать директорию \"%s\". %s%n", directory.getPath(), USE_CURRENT_DIRECTORY);
     }
 
-    public static void filledFileMessage(File file) {
-        System.out.printf("Файл \"%s\" успешно заполнен.%n", file.getAbsolutePath());
+    public void filledFileMessage(File file) {
+        out.printf("Файл \"%s\" успешно заполнен.%n", file.getAbsolutePath());
     }
 
-    public static void writeFileError(File file) {
-        System.out.printf("Возникла ошибка при работе с файлом \"%s\".%n", file.getName());
+    public void writeFileError(File file) {
+        out.printf("Возникла ошибка при работе с файлом \"%s\".%n", file.getName());
     }
 
-    public static void readFileError(File file) {
-        System.out.printf("Возникла ошибка при чтении файла \"%s\"%n", file.getName());
+    public void readFileError(File file) {
+        out.printf("Возникла ошибка при чтении файла \"%s\".%n", file.getName());
+    }
+
+    public void unknownOptionError(String arg) {
+        out.printf("Неизвестная опция: \"%s\"%n", arg);
+        dividerMessage();
+    }
+
+    public void dividerMessage() {
+        out.println("--------------------------------------------------------------------------");
     }
 }
